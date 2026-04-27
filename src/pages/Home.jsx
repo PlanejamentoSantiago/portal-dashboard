@@ -29,11 +29,11 @@ export default function Home() {
     { id: 'rcbitapeva_divzero', label: 'RCB Itapeva / DivZero' },
   ];
 
-  // 🔥 FETCH ROBUSTO
+  // 🔥 FETCH COM SUPORTE A PUBLICO
   useEffect(() => {
-    if (!userRole) return; // 👈 só roda quando role REAL existe
+    if (!userRole) return;
 
-    let isMounted = true; // evita race condition
+    let isMounted = true;
 
     async function getDashboards() {
       setLoading(true)
@@ -48,7 +48,10 @@ export default function Home() {
       let query = supabase.from('dashboards').select('*')
 
       if (role !== 'gerencia') {
-        query = query.eq('permission_role', role)
+        query = query.in('permission_role', [
+          role,
+          'publico'
+        ])
       }
 
       const { data, error } = await query
@@ -73,7 +76,7 @@ export default function Home() {
 
   }, [userRole])
 
-  // 🚀 FILTRO DERIVADO (SEM STATE)
+  // 🚀 FILTRO CORRETO (SEM PUBLICO NAS ABAS)
   const filteredDashboards = useMemo(() => {
     if (!dashboards.length) return [];
 
@@ -89,7 +92,7 @@ export default function Home() {
     setSelectedDash(null);
   };
 
-  // 🔒 LOADING CORRETO
+  // 🔒 LOADING
   if (loading || !userRole) return (
     <div style={{
       display: 'flex',
@@ -104,7 +107,7 @@ export default function Home() {
   )
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f1f5f9' }}>
+    <div style={{ display: 'flex', height: '100vh', backgroundColor: '#f1f5f9' }}>
 
       {/* SIDEBAR */}
       <aside style={{
@@ -185,7 +188,11 @@ export default function Home() {
       </aside>
 
       {/* CONTEÚDO */}
-      <main style={{ flex: 1, padding: '40px' }}>
+      <main style={{ 
+        flex: 1, 
+        padding: '40px',
+        overflowY: 'auto'
+      }}>
 
         {selectedDash ? (
           <>

@@ -5,8 +5,7 @@ export default function CardDashboard({ dashboard }) {
   const navigate = useNavigate();
   const [imgError, setImgError] = useState(false);
 
-  const normalize = (str) => str?.trim().toLowerCase();
-  const imagePath = `/thumbnails/${dashboard.id}.png`;
+  const imagePath = `${import.meta.env.BASE_URL}thumbnails/${dashboard.id}.png`;
 
   return (
     <div 
@@ -67,7 +66,7 @@ export default function CardDashboard({ dashboard }) {
           color: '#475569',
           fontWeight: '600'
         }}>
-          {dashboard.categoria || 'Geral'} 
+          {dashboard.permission_role} 
         </span>
       </div>
 
