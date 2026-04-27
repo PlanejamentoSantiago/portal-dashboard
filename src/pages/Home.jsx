@@ -4,6 +4,7 @@ import CardDashboard from '../components/CardDashboard'
 import { useAuth } from '../context/AuthContext';
 import logoutIcon from '../assets/logout.png';
 import logo from '../assets/logo.png';
+import MaterialApoio from '../components/MaterialApoio';
 
 export default function Home() {
   const [dashboards, setDashboards] = useState([])
@@ -27,6 +28,7 @@ export default function Home() {
     { id: 'bradesco_sa', label: 'Bradesco SA' },
     { id: 'bradesco_financiamentos', label: 'Bradesco Financiamentos' },
     { id: 'rcbitapeva_divzero', label: 'RCB Itapeva / DivZero' },
+    { id: 'material_apoio', label: 'Material de Apoio' },
   ];
 
   // 🔥 FETCH COM SUPORTE A PUBLICO
@@ -138,7 +140,7 @@ export default function Home() {
 
         <nav style={{ padding: '20px 0' }}>
           {menus.map((menu) => (
-            (normalize(userRole) === 'gerencia' || menu.id === userRole || menu.id === 'Todos') && (
+            (normalize(userRole) === 'gerencia' || menu.id === userRole || menu.id === 'Todos' || menu.id === 'material_apoio') && (
               <button
                 key={menu.id}
                 onClick={() => handleFilter(menu.id)}
@@ -211,6 +213,8 @@ export default function Home() {
             <h1>
               {activeTab === 'Todos' 
                 ? 'Todos os Projetos' 
+                : activeTab === 'material_apoio'
+                ? 'Material de Apoio'
                 : roleLabels[activeTab] || activeTab}
             </h1>
 
@@ -220,8 +224,10 @@ export default function Home() {
               </strong>
             </p>
 
-            {/* GRID */}
-            {filteredDashboards.length === 0 ? (
+            {/* GRID / MATERIAL */}
+            {activeTab === 'material_apoio' ? (
+              <MaterialApoio />
+            ) : filteredDashboards.length === 0 ? (
               <p style={{ color: '#64748b' }}>
                 Nenhum dashboard disponível.
               </p>
