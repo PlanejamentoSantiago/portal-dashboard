@@ -191,21 +191,58 @@ export default function Home() {
       <main style={{ 
         flex: 1, 
         padding: '40px',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        backgroundColor: selectedDash ? '#f8fafc' : '#f1f5f9'
       }}>
 
         {selectedDash ? (
-          <>
-            <button onClick={() => setSelectedDash(null)}>
+          <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <button 
+              onClick={() => setSelectedDash(null)}
+              style={{
+                alignSelf: 'flex-start',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 20px',
+                backgroundColor: '#fff',
+                color: '#153d7a',
+                border: '1px solid #e2e8f0',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                transition: 'all 0.2s'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = '#f1f5f9';
+                e.currentTarget.style.transform = 'translateX(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = '#fff';
+                e.currentTarget.style.transform = 'translateX(0)';
+              }}
+            >
               ← Voltar
             </button>
 
-            <iframe
-              title={selectedDash.titulo}
-              src={selectedDash.url_iframe}
-              style={{ width: '100%', height: '80vh', border: 'none' }}
-            />
-          </>
+            <div style={{ 
+              marginTop: '20px', 
+              flex: 1, 
+              backgroundColor: '#fff', 
+              borderRadius: '12px', 
+              boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
+              overflow: 'hidden',
+              border: '1px solid #e2e8f0'
+            }}>
+              <iframe
+                title={selectedDash.titulo}
+                src={selectedDash.url_iframe}
+                style={{ width: '100%', height: '82vh', border: 'none' }}
+              />
+            </div>
+          </div>
         ) : (
           <>
             <h1>
