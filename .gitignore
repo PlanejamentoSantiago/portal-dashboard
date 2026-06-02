@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Thumbnails (dados sensíveis)
+public/thumbnails/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -19,7 +19,8 @@ export default function Home() {
     gerencia: 'Gerência',
     bradesco_sa: 'Bradesco SA',
     bradesco_financiamentos: 'Bradesco Financiamentos',
-    rcbitapeva_divzero: 'RCB Itapeva / DivZero'
+    rcbitapeva_divzero: 'RCB Itapeva / DivZero',
+    bsc: 'BSC'
   };
 
   const menus = [
@@ -27,6 +28,7 @@ export default function Home() {
     { id: 'bradesco_sa', label: 'Bradesco SA' },
     { id: 'bradesco_financiamentos', label: 'Bradesco Financiamentos' },
     { id: 'rcbitapeva_divzero', label: 'RCB Itapeva / DivZero' },
+    { id: 'bsc', label: 'BSC' },
   ];
 
   // 🔥 FETCH COM SUPORTE A PUBLICO

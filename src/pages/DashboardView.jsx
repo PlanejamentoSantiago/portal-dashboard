@@ -16,7 +16,7 @@ export default function DashboardView() {
         .select('*')
         .eq('id', id)
         .single();
-      
+
       if (error || !data) {
         console.error("Erro ao carregar:", error);
         setError(true);
@@ -28,16 +28,16 @@ export default function DashboardView() {
   }, [id]);
 
   if (error) return (
-    <div style={{ 
-      padding: '20px', 
+    <div style={{
+      padding: '20px',
       textAlign: 'center',
       background: '#f9fafb',
       height: '100vh'
     }}>
       <h2 style={{ color: '#1f2937' }}>Dashboard não encontrado</h2>
-      <button 
+      <button
         onClick={() => navigate('/')}
-        style={{ 
+        style={{
           padding: '10px 20px',
           cursor: 'pointer',
           borderRadius: '6px',
@@ -53,11 +53,11 @@ export default function DashboardView() {
   );
 
   if (!dash) return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      height: '100vh', 
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100vh',
       backgroundColor: '#f9fafb',
       color: '#153d7a'
     }}>
@@ -66,16 +66,16 @@ export default function DashboardView() {
   );
 
   return (
-    <div style={{ 
-      width: '100%', 
-      height: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      overflow: 'hidden' 
+    <div style={{
+      width: '100%',
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
     }}>
-      
+
       {/* HEADER */}
-      <header style={{ 
+      <header style={{
         padding: '12px 24px',
         backgroundColor: '#153d7a',
         borderBottom: '1px solid #0f2c57',
@@ -84,11 +84,11 @@ export default function DashboardView() {
         gap: '20px',
         zIndex: 10
       }}>
-        
+
         {/* BOTÃO VOLTAR */}
-        <button 
-          onClick={() => navigate(-1)} 
-          style={{ 
+        <button
+          onClick={() => navigate(-1)}
+          style={{
             padding: '8px 16px',
             cursor: 'pointer',
             borderRadius: '6px',
@@ -107,16 +107,16 @@ export default function DashboardView() {
 
         {/* TÍTULO */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <h1 style={{ 
-            margin: 0, 
-            fontSize: '1.15rem', 
+          <h1 style={{
+            margin: 0,
+            fontSize: '1.15rem',
             color: '#ffffff',
-            fontWeight: '600' 
+            fontWeight: '600'
           }}>
             {dash.titulo}
           </h1>
 
-          <span style={{ 
+          <span style={{
             fontSize: '0.8rem',
             color: '#c8a24a', // 🔥 dourado aplicado com leveza
             textTransform: 'uppercase',
@@ -128,17 +128,17 @@ export default function DashboardView() {
       </header>
 
       {/* IFRAME */}
-      <div style={{ 
-        flexGrow: 1, 
-        position: 'relative', 
-        backgroundColor: '#f9fafb' 
+      <div style={{
+        flexGrow: 1,
+        position: 'relative',
+        backgroundColor: '#f9fafb'
       }}>
         <iframe
           title={dash.titulo}
           src={dash.url_iframe}
-          style={{ 
-            width: '100%', 
-            height: '100%', 
+          style={{
+            width: '100%',
+            height: '100%',
             border: 'none',
             position: 'absolute',
             top: 0,
