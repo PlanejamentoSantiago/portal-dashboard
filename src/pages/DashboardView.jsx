@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { ArrowLeft, Maximize2, AlertTriangle } from 'lucide-react';
 import { supabase } from '../SupabaseClient';
-import backButton from '../assets/back_button.png';
 
 export default function DashboardView() {
   const { id } = useParams();
@@ -10,141 +10,88 @@ export default function DashboardView() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    async function loadDashboard() {
+    (async () => {
       const { data, error } = await supabase
         .from('dashboards')
         .select('*')
         .eq('id', id)
         .single();
-
       if (error || !data) {
-        console.error("Erro ao carregar:", error);
+        console.error('Erro ao carregar:', error);
         setError(true);
       } else {
         setDash(data);
+        // Registra o acesso (alimenta o destaque "mais usado"). Fire-and-forget.
+        supabase.rpc('registrar_acesso', { dash: id }).then(({ error: e }) => {
+          if (e) console.warn('registrar_acesso:', e.message);
+        });
       }
-    }
-    loadDashboard();
+    })();
   }, [id]);
 
-  if (error) return (
-    <div style={{
-      padding: '20px',
-      textAlign: 'center',
-      background: '#f9fafb',
-      height: '100vh'
-    }}>
-      <h2 style={{ color: '#1f2937' }}>Dashboard não encontrado</h2>
-      <button
-        onClick={() => navigate('/')}
-        style={{
-          padding: '10px 20px',
-          cursor: 'pointer',
-          borderRadius: '6px',
-          backgroundColor: '#0f2c57',
-          color: '#fff',
-          border: 'none',
-          fontWeight: '600'
-        }}
-      >
-        Voltar para Home
-      </button>
-    </div>
-  );
+  const openFullscreen = () => {
+    const el = document.getElementById('bi-frame');
+    if (el?.requestFullscreen) el.requestFullscreen();
+  };
 
-  if (!dash) return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      backgroundColor: '#f9fafb',
-      color: '#153d7a'
-    }}>
-      <p>Carregando visualizador...</p>
-    </div>
-  );
+  if (error) {
+    return (
+      <div className="center-screen">
+        <AlertTriangle size={40} color="#dc2626" />
+        <h2>Dashboard não encontrado</h2>
+        <button className="btn btn--primary" onClick={() => navigate('/')}>
+          Voltar ao portal
+        </button>
+      </div>
+    );
+  }
+
+  if (!dash) {
+    return (
+      <div className="center-screen">
+        <div className="spinner" />
+      </div>
+    );
+  }
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden'
-    }}>
-
-      {/* HEADER */}
-      <header style={{
-        padding: '12px 24px',
-        backgroundColor: '#153d7a',
-        borderBottom: '1px solid #0f2c57',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '20px',
-        zIndex: 10
-      }}>
-
-        {/* BOTÃO VOLTAR */}
-        <button
-          onClick={() => navigate(-1)}
-          style={{
-            padding: '8px 16px',
-            cursor: 'pointer',
-            borderRadius: '6px',
-            border: '1px solid #0f2c57',
-            backgroundColor: '#0f2c57',
-            color: '#ffffff',
-            fontWeight: '600',
-            fontSize: '0.9rem',
-            transition: 'all 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.background = '#1f4f9c'}
-          onMouseOut={(e) => e.currentTarget.style.background = '#0f2c57'}
-        >
-          {"< Voltar"}
+    <div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <header
+        style={{
+          padding: '12px 24px',
+          background: 'linear-gradient(90deg, #153d7a, #0f2c57)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 18,
+        }}
+      >
+        <button className="btn btn--ghost" onClick={() => navigate(-1)} style={{ padding: '8px 14px' }}>
+          <ArrowLeft size={16} /> Voltar
         </button>
 
-        {/* TÍTULO */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <h1 style={{
-            margin: 0,
-            fontSize: '1.15rem',
-            color: '#ffffff',
-            fontWeight: '600'
-          }}>
-            {dash.titulo}
-          </h1>
-
-          <span style={{
-            fontSize: '0.8rem',
-            color: '#c8a24a', // 🔥 dourado aplicado com leveza
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px'
-          }}>
-            {dash.categoria}
+          <h1 style={{ margin: 0, fontSize: '1.1rem', color: '#fff' }}>{dash.titulo}</h1>
+          <span style={{ fontSize: '0.78rem', color: '#c8a24a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            {dash.permission_role || dash.categoria}
           </span>
         </div>
+
+        <button
+          className="btn btn--ghost"
+          onClick={openFullscreen}
+          style={{ marginLeft: 'auto', padding: '8px 14px' }}
+        >
+          <Maximize2 size={16} /> Tela cheia
+        </button>
       </header>
 
-      {/* IFRAME */}
-      <div style={{
-        flexGrow: 1,
-        position: 'relative',
-        backgroundColor: '#f9fafb'
-      }}>
+      <div style={{ flexGrow: 1, position: 'relative', background: '#f4f6fb' }}>
         <iframe
+          id="bi-frame"
           title={dash.titulo}
           src={dash.url_iframe}
-          style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-            position: 'absolute',
-            top: 0,
-            left: 0
-          }}
-          allowFullScreen={true}
+          style={{ width: '100%', height: '100%', border: 'none', position: 'absolute', inset: 0 }}
+          allowFullScreen
         />
       </div>
     </div>
