@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Plus, Pencil, Trash2, X, BarChart3, Save, Loader2, Copy, Check, ImageOff } from 'lucide-react';
 import { supabase } from '../../SupabaseClient';
+import { backgroundFor } from '../../lib/brands';
 
 const ROLES = ['publico', 'bradesco_sa', 'bradesco_financiamentos', 'rcbitapeva_divzero', 'bsc', 'gerencia'];
 
@@ -11,11 +12,14 @@ const emptyForm = {
 
 const thumbSrc = (row) => row.image_url || `${import.meta.env.BASE_URL}thumbnails/${row.id}.png`;
 
-// Miniatura com fallback pro ícone
+// Miniatura: própria -> background do grupo -> ícone
 function Thumb({ row }) {
   const [err, setErr] = useState(false);
-  if (err || !row.id) return <BarChart3 size={18} />;
-  return <img src={thumbSrc(row)} alt="" onError={() => setErr(true)} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} />;
+  const [bgErr, setBgErr] = useState(false);
+  const imgStyle = { width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 };
+  if (!err && row.id) return <img src={thumbSrc(row)} alt="" onError={() => setErr(true)} style={imgStyle} />;
+  if (!bgErr) return <img src={backgroundFor(row.permission_role)} alt="" onError={() => setBgErr(true)} style={imgStyle} />;
+  return <BarChart3 size={18} />;
 }
 
 export default function DashboardsAdmin({ notify }) {

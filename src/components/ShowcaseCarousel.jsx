@@ -50,7 +50,14 @@ export default function ShowcaseCarousel({ slides = [] }) {
           return (
             <div className="slide" key={s.id}>
               {s.image_url ? (
-                <img className="slide__img" src={s.image_url} alt={s.titulo} />
+                <img
+                  className="slide__img"
+                  src={s.image_url}
+                  alt={s.titulo}
+                  onError={(e) => {
+                    if (s.fallback && e.currentTarget.src !== s.fallback) e.currentTarget.src = s.fallback;
+                  }}
+                />
               ) : (
                 <div className="slide__img" style={{ background: 'linear-gradient(120deg, #153d7a, #0f2c57)' }} />
               )}

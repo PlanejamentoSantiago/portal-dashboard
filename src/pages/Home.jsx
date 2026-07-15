@@ -8,7 +8,7 @@ import Sidebar from '../components/Sidebar';
 import ShowcaseCarousel from '../components/ShowcaseCarousel';
 import DashboardCard from '../components/DashboardCard';
 import ChangelogModal from '../components/ChangelogModal';
-import { brandFor } from '../lib/brands';
+import { brandFor, backgroundFor } from '../lib/brands';
 import { APP_VERSION } from '../changelog';
 
 const roleLabels = {
@@ -110,7 +110,7 @@ export default function Home() {
         auto.push({
           id: `novo-${novo.id}`, titulo: novo.titulo,
           subtitulo: novo.descricao || 'Novo dashboard disponível no portal.',
-          image_url: autoImg(novo), badge: 'novo',
+          image_url: autoImg(novo), fallback: backgroundFor(novo.permission_role), badge: 'novo',
           ctaLabel: 'Abrir Dashboard', onAction: () => openDashboard(novo),
         });
       }
@@ -119,7 +119,7 @@ export default function Home() {
         auto.push({
           id: `destaque-${destaque.id}`, titulo: destaque.titulo,
           subtitulo: destaque.descricao || 'Um dos dashboards mais acessados.',
-          image_url: autoImg(destaque), badge: 'destaque',
+          image_url: autoImg(destaque), fallback: backgroundFor(destaque.permission_role), badge: 'destaque',
           ctaLabel: 'Abrir Dashboard', onAction: () => openDashboard(destaque),
         });
       }

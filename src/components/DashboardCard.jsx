@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BarChart3, Star, ExternalLink } from 'lucide-react';
-import { brandFor } from '../lib/brands';
+import { brandFor, backgroundFor } from '../lib/brands';
 
 /**
  * Card de dashboard.
@@ -8,10 +8,12 @@ import { brandFor } from '../lib/brands';
  */
 export default function DashboardCard({ dashboard, isFavorite, onToggleFavorite, onOpen }) {
   const [imgError, setImgError] = useState(false);
+  const [bgError, setBgError] = useState(false);
 
-  // Prioridade: image_url (Storage/URL) -> thumbnail legado em /public -> ícone
+  // Prioridade: miniatura própria (image_url ou {uuid}.png) -> background do grupo -> ícone
   const legacy = `${import.meta.env.BASE_URL}thumbnails/${dashboard.id}.png`;
   const src = dashboard.image_url || legacy;
+  const background = backgroundFor(dashboard.permission_role);
 
   const role = String(dashboard.permission_role || '').toLowerCase();
   const isPublic = role === 'publico';
@@ -20,8 +22,10 @@ export default function DashboardCard({ dashboard, isFavorite, onToggleFavorite,
   return (
     <div className="card" onClick={() => onOpen(dashboard)}>
       <div className="card__thumb">
-        {!imgError && src ? (
+        {!imgError ? (
           <img src={src} alt={dashboard.titulo} onError={() => setImgError(true)} />
+        ) : !bgError ? (
+          <img src={background} alt={dashboard.titulo} onError={() => setBgError(true)} />
         ) : (
           <BarChart3 size={44} className="card__thumb-fallback" />
         )}
